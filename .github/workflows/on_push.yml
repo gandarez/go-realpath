@@ -1,0 +1,79 @@
+name: Tests
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize]
+  push:
+    branches: [master]
+    tags-ignore: "**"
+
+env:
+  GO_VERSION_FILE: "go.mod"
+  CHECK_LATEST: true
+
+jobs:
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: ${{ env.GO_VERSION_FILE }}
+          check-latest: ${{ env.CHECK_LATEST }}
+      -
+        name: Pull dependencies
+        run: make install-go-modules
+      -
+        name: Unit tests
+        run: make test
+      -
+        name: Linter
+        run: make lint
+      -
+        name: Vulnerability scan
+        run: make vulncheck
+
+  test-windows:
+    name: Unit Tests Windows
+    runs-on: windows-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: ${{ env.GO_VERSION_FILE }}
+          check-latest: ${{ env.CHECK_LATEST }}
+      -
+        name: Pull dependencies
+        run: make install-go-modules
+      -
+        name: Unit tests
+        run: make test
+      -
+        name: Linter
+        run: make lint
+
+  test-macos:
+    name: Unit Tests macOS
+    runs-on: macos-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: ${{ env.GO_VERSION_FILE }}
+          check-latest: ${{ env.CHECK_LATEST }}
+      -
+        name: Pull dependencies
+        run: make install-go-modules
+      -
+        name: Unit tests
+        run: make test

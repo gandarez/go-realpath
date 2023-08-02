@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 )
 
+// Realpath returns the canonicalized absolute pathname.
 func Realpath(path string) (string, error) {
 	if len(path) == 0 {
 		return "", os.ErrInvalid
