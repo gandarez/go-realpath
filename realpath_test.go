@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/gandarez/go-realpath"
@@ -33,12 +34,33 @@ func TestRealpath_ZeroLenght(t *testing.T) {
 }
 
 func TestRealpath_NonFile(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("skipping test on windows platform")
+	}
+
 	wd, err := os.Getwd()
 	require.NoError(t, err)
 
 	_, err = realpath.Realpath("non-file")
 
 	assert.EqualError(t, err, fmt.Sprintf("lstat %s: no such file or directory", filepath.Join(wd, "non-file")))
+}
+
+func TestRealpath_NonFile_Windows(t *testing.T) {
+	if runtime.GOOS != "windows" {
+		t.Skip("skipping test on non-windows platform")
+	}
+
+	wd, err := os.Getwd()
+	require.NoError(t, err)
+
+	_, err = realpath.Realpath("non-file")
+
+	assert.EqualError(
+		t,
+		err,
+		fmt.Sprintf("CreateFile %s: The system cannot find the file specified.", filepath.Join(wd, "non-file")),
+	)
 }
 
 func TestRealpath_RelativePath(t *testing.T) {

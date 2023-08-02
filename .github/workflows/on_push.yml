@@ -20,19 +20,23 @@ jobs:
         name: Checkout
         uses: actions/checkout@v3
       -
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version-file: ${{ env.GO_VERSION_FILE }}
           check-latest: ${{ env.CHECK_LATEST }}
+          cache: false
       -
         name: Pull dependencies
         run: make install-go-modules
       -
         name: Unit tests
         run: make test
-      -
+      - 
         name: Linter
-        run: make lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+          skip-cache: true
       -
         name: Vulnerability scan
         run: make vulncheck
@@ -45,19 +49,23 @@ jobs:
         name: Checkout
         uses: actions/checkout@v3
       -
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version-file: ${{ env.GO_VERSION_FILE }}
           check-latest: ${{ env.CHECK_LATEST }}
+          cache: false
       -
         name: Pull dependencies
         run: make install-go-modules
       -
         name: Unit tests
         run: make test
-      -
+      - 
         name: Linter
-        run: make lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+          skip-cache: true
 
   test-macos:
     name: Unit Tests macOS
@@ -67,13 +75,20 @@ jobs:
         name: Checkout
         uses: actions/checkout@v3
       -
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version-file: ${{ env.GO_VERSION_FILE }}
           check-latest: ${{ env.CHECK_LATEST }}
+          cache: false
       -
         name: Pull dependencies
         run: make install-go-modules
       -
         name: Unit tests
         run: make test
+      - 
+        name: Linter
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+          skip-cache: true
