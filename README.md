@@ -2,6 +2,8 @@
 
 Realpath for Go. This finds the true path of a file or directory, resolving any symbolic links.
 
+It adds some extra features to the yookoala library's [filepath](https://github.com/yookoala/realpath) package. Instead of manually iterating over the path components, it uses the `filepath.Abs`, `filepath.Clean` function to do it for you. It also evaluates symbolic links.
+
 ## Installation
 
 ```bash
